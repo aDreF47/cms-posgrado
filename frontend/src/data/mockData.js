@@ -4,7 +4,7 @@ export const mockDatabase = {
   config: {
     studentAccessCode: "POSGRADO2025",
     siteName: "Posgrado UNMSM - Facultad de Educación",
-    semester: "2025-I"
+    semester: "2025-II"
   },
   
   // Usuarios admin/colaboradores
