@@ -9,6 +9,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [socialMenuOpen, setSocialMenuOpen] = useState(false);
 
   // Usar tu AuthContext
   const { isAuthenticated, userType, user, logout } = useAuth();
@@ -83,31 +84,94 @@ function Header() {
         </div>
         <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
           {/* Redes sociales */}
-          <div className="flex gap-4 text-xl">
-            <a
-              href="https://www.facebook.com/PosgradoEducacionUNMSM/?locale=es_LA"
-              className="hover:text-gray-300 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaFacebookF />
-            </a>
-            <a
-              href="https://x.com/PosgradoUNMSM"
-              className="hover:text-gray-300 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaTwitter />
-            </a>
-            <a
-              href="https://wa.me/51965229338?text=Hola,%20necesito%20informacion."
-              className="hover:text-gray-300 transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaWhatsapp />
-            </a>
+          <div className="relative">
+            {/* Desktop - mostrar todos */}
+            <div className="hidden md:flex gap-4 text-xl">
+              <a
+                href="https://www.facebook.com/PosgradoEducacionUNMSM/?locale=es_LA"
+                className="hover:text-gray-300 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaFacebookF />
+              </a>
+              <a
+                href="https://x.com/PosgradoUNMSM"
+                className="hover:text-gray-300 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaTwitter />
+              </a>
+              <a
+                href="https://wa.me/51965229338?text=Hola,%20necesito%20informacion."
+                className="hover:text-gray-300 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaWhatsapp />
+              </a>
+            </div>
+
+            {/* Mobile - dropdown */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setSocialMenuOpen(!socialMenuOpen)}
+                className="flex items-center hover:text-gray-300 transition-colors p-2"
+              >
+                <svg
+                  className={`w-5 h-5 transition-transform duration-300 ${
+                    socialMenuOpen ? "rotate-180" : ""
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              {socialMenuOpen && (
+                <div className="absolute top-full left-0 bg-[#880E1F] rounded-lg shadow-lg z-50">
+                  <div className="flex flex-col p-2 gap-2 min-w-[140px]">
+                    <a
+                      href="https://www.facebook.com/PosgradoEducacionUNMSM/?locale=es_LA"
+                      className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setSocialMenuOpen(false)}
+                    >
+                      <FaFacebookF className="text-lg" />
+                      <span className="text-sm">Facebook</span>
+                    </a>
+                    <a
+                      href="https://x.com/PosgradoUNMSM"
+                      className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setSocialMenuOpen(false)}
+                    >
+                      <FaTwitter className="text-lg" />
+                      <span className="text-sm">Twitter</span>
+                    </a>
+                    <a
+                      href="https://wa.me/51965229338?text=Hola,%20necesito%20informacion."
+                      className="flex items-center gap-3 px-3 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setSocialMenuOpen(false)}
+                    >
+                      <FaWhatsapp className="text-lg" />
+                      <span className="text-sm">WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Secciones */}
@@ -207,7 +271,10 @@ function Header() {
               className={`flex flex-col justify-center items-center w-10 h-10 transition-all duration-300 md:hidden ${
                 menuOpen ? "gap-0" : "gap-1.5"
               }`}
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={() => {
+                setMenuOpen(!menuOpen);
+                setSocialMenuOpen(false);
+              }}
             >
               <span
                 className={`block w-6 h-0.5 bg-white transition-transform duration-300 ${
@@ -289,7 +356,6 @@ function Header() {
           )}
 
           <div className="mt-auto">
-
             {/* Logout en mobile */}
             <button
               onClick={handleLogout}
