@@ -93,9 +93,11 @@ export const AuthProvider = ({ children }) => {
   
   const checkExistingSession = async () => {
     try {
-      dispatch({ type: AUTH_ACTIONS.AUTH_START })
+      // 🔧 Agregar logs para debug
+      console.log('🔍 AuthContext: Verificando sesión existente...')
       
       const result = await api.auth.verify()
+      console.log('📊 AuthContext: Resultado verificación:', result)
       
       if (result.valid && result.session) {
         const session = result.session
@@ -108,11 +110,13 @@ export const AuthProvider = ({ children }) => {
             permissions: session.permissions || []
           }
         })
+        console.log('✅ AuthContext: Sesión restaurada para:', session.userType)
       } else {
+        console.log('❌ AuthContext: No hay sesión válida')
         dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false })
       }
     } catch (error) {
-      console.error('Session check failed:', error)
+      console.error('❌ AuthContext: Error verificando sesión:', error)
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false })
     }
   }
@@ -120,22 +124,31 @@ export const AuthProvider = ({ children }) => {
   // Student login
   const studentLogin = async (accessCode) => {
     try {
+      console.log('🚀 AuthContext: Iniciando login estudiante con código:', accessCode)
       dispatch({ type: AUTH_ACTIONS.AUTH_START })
       
       const result = await api.auth.studentLogin(accessCode)
+      console.log('📨 AuthContext: Respuesta API studentLogin:', result)
       
-      dispatch({
-        type: AUTH_ACTIONS.AUTH_SUCCESS,
-        payload: {
-          user: { userType: 'student' },
-          userType: 'student',
-          role: null,
-          permissions: ['read']
-        }
-      })
-      
-      return { success: true }
+      // ✅ Solo hacer dispatch si el API respondió exitosamente
+      if (result.success) {
+        dispatch({
+          type: AUTH_ACTIONS.AUTH_SUCCESS,
+          payload: {
+            user: { userType: 'student', name: 'Estudiante de Posgrado' },
+            userType: 'student',
+            role: null,
+            permissions: ['read']
+          }
+        })
+        console.log('✅ AuthContext: Login estudiante exitoso')
+        return { success: true }
+      } else {
+        // Si por alguna razón result.success es false
+        throw new Error('Login falló')
+      }
     } catch (error) {
+      console.error('❌ AuthContext: Error en studentLogin:', error)
       dispatch({
         type: AUTH_ACTIONS.AUTH_FAILURE,
         payload: error.message
@@ -147,22 +160,29 @@ export const AuthProvider = ({ children }) => {
   // Admin login  
   const adminLogin = async (username, password) => {
     try {
+      console.log('🚀 AuthContext: Iniciando login admin:', username)
       dispatch({ type: AUTH_ACTIONS.AUTH_START })
       
       const result = await api.auth.adminLogin(username, password)
+      console.log('📨 AuthContext: Respuesta API adminLogin:', result)
       
-      dispatch({
-        type: AUTH_ACTIONS.AUTH_SUCCESS,
-        payload: {
-          user: result.user,
-          userType: 'admin',
-          role: result.role,
-          permissions: result.permissions || []
-        }
-      })
-      
-      return { success: true }
+      if (result.success) {
+        dispatch({
+          type: AUTH_ACTIONS.AUTH_SUCCESS,
+          payload: {
+            user: result.user,
+            userType: 'admin',
+            role: result.role,
+            permissions: result.permissions || []
+          }
+        })
+        console.log('✅ AuthContext: Login admin exitoso')
+        return { success: true }
+      } else {
+        throw new Error('Login admin falló')
+      }
     } catch (error) {
+      console.error('❌ AuthContext: Error en adminLogin:', error)
       dispatch({
         type: AUTH_ACTIONS.AUTH_FAILURE,
         payload: error.message
@@ -174,10 +194,13 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logout = async () => {
     try {
+      console.log('🚪 AuthContext: Iniciando logout...')
       await api.auth.logout()
       dispatch({ type: AUTH_ACTIONS.LOGOUT })
+      console.log('✅ AuthContext: Logout exitoso')
       return { success: true }
     } catch (error) {
+      console.error('⚠️ AuthContext: Error en logout API, limpiando estado local:', error)
       // Even if API call fails, clear local state
       dispatch({ type: AUTH_ACTIONS.LOGOUT })
       return { success: true }
@@ -186,6 +209,7 @@ export const AuthProvider = ({ children }) => {
   
   // Clear error
   const clearError = () => {
+    console.log('🧹 AuthContext: Limpiando error')
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR })
   }
   
@@ -239,7 +263,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error("useAuth debe usarse dentro de un AuthProvider")
   }
   return context
 }
