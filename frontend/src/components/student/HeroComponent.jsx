@@ -15,24 +15,24 @@ const heroSlides = [
   },
   {
     id: 2,
-    title: "Maestría en",
-    subtitle: "Investigación",
+    title: "Programas de",
+    subtitle: "Maestría",
     description:
-      "Forma parte de la nueva generación de investigadores que transformarán el futuro de la educación superior.",
+      "Impulsa tu carrera docente con nuestros programas de maestría profesional en nuestros distintos campos de la educación.",
     backgroundImage:
-      "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    accent: "Investigación",
+      "https://posgradoeducacion.unmsm.edu.pe/_next/image?url=https%3A%2F%2Funmsm-static-files.s3.us-east-2.amazonaws.com%2Feducacion%2Fbackgroundinicio%2Fsustentacion-posgrado-educacion-3.jpg&w=3840&q=100",
+    accent: "Maestría",
     buttonText: "Conoce Más",
   },
   {
     id: 3,
-    title: "Doctorado en",
-    subtitle: "Ciencias",
+    title: "Programas de",
+    subtitle: "Doctorado",
     description:
-      "Alcanza la excelencia académica y contribuye al desarrollo científico de nuestro país y la región.",
+      "Alcanza el más alto nivel académico con nuestros programas de doctorado en educación.",
     backgroundImage:
-      "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
-    accent: "Ciencias",
+      "https://posgradoeducacion.unmsm.edu.pe/_next/image?url=https%3A%2F%2Fposgrado-unmsm.s3.sa-east-1.amazonaws.com%2Fdoctorado_en_educacion_y_docencia_universitaria_df26a7e521.png&w=3840&q=75",
+    accent: "Doctorado",
     buttonText: "Explora Más",
   },
   {
@@ -42,7 +42,7 @@ const heroSlides = [
     description:
       "Desarrolla competencias pedagógicas avanzadas para liderar procesos de innovación educativa.",
     backgroundImage:
-      "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80",
+      "https://unmsm-static-files.s3.us-east-2.amazonaws.com/whatsapp-image%202024-01-10%20at%202-1704915984822.jpeg",
     accent: "Pedagogía",
     buttonText: "Descubre Más",
   },

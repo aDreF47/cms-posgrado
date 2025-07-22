@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; // ← Usar tu AuthContext
 import { FaFacebookF, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import universidadLogo from "../../assets/logo-upg.png";
+import LogoutConfirmModal from "../modals/LogoutConfirmModal";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Usar tu AuthContext
   const { isAuthenticated, userType, user, logout } = useAuth();
@@ -35,10 +37,21 @@ function Header() {
     };
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  // AGREGAR función para confirmar logout:
+  const confirmLogout = async () => {
+    setShowLogoutModal(false);
     await logout();
     navigate("/login");
     setMenuOpen(false);
+  };
+
+  // AGREGAR función para cancelar:
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   // Si no está autenticado, no mostrar el header (ya que está en página de login)
@@ -56,18 +69,18 @@ function Header() {
         }`}
       >
         <div className="flex md:hidden justify-center items-center py-2 absolute left-0 right-0 mx-auto w-full pointer-events-none z-10">
-  <Link
-    to="/home"
-    className="flex items-center gap-3 px-6 cursor-pointer hover:text-gray-300 transition-colors"
-  >
-    <img
-      src={universidadLogo}
-      alt="Logo"
-      className="h-16 w-16 rounded-full object-cover bg-white p-1"
-    />
-    <span className="text-3xl font-bold ml-3">Posgrado</span>
-  </Link>
-</div>
+          <Link
+            to="/home"
+            className="flex items-center gap-3 px-6 cursor-pointer hover:text-gray-300 transition-colors"
+          >
+            <img
+              src={universidadLogo}
+              alt="Logo"
+              className="h-16 w-16 rounded-full object-cover bg-white p-1"
+            />
+            <span className="text-3xl font-bold ml-3">Posgrado</span>
+          </Link>
+        </div>
         <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
           {/* Redes sociales */}
           <div className="flex gap-4 text-xl">
@@ -276,13 +289,6 @@ function Header() {
           )}
 
           <div className="mt-auto">
-            {/* <div className="flex items-center gap-2 bg-white rounded-full px-3 py-1 text-black w-full mb-4">
-              <input 
-                type="text" 
-                placeholder="Buscar información..." 
-                className="flex-1 outline-none text-sm" 
-              />
-            </div> */}
 
             {/* Logout en mobile */}
             <button
@@ -296,6 +302,11 @@ function Header() {
           </div>
         </div>
       </div>
+      <LogoutConfirmModal
+        isOpen={showLogoutModal}
+        onConfirm={confirmLogout}
+        onCancel={cancelLogout}
+      />
     </>
   );
 }

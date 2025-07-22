@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import HeroSection from './../../components/student/HeroComponent';
-import MasonryProgramCarousel from './../../components/student/MasonryProgramCarousel';
+import ProgramCarousel from '../../components/student/ProgramCarousel';
 const HomeStudent = () => {
   const [scrollY, setScrollY] = useState(0);
 
@@ -15,7 +15,7 @@ const HomeStudent = () => {
       {/* Hero Section */}
       <HeroSection/>
       {/* Sección de Programas */}
-      <MasonryProgramCarousel />
+      <ProgramCarousel />
 
       {/* Sección de Funcionalidades del Sistema */}
       <section className="py-20 bg-white">
