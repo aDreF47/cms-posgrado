@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; // ← Usar tu AuthContext
 import { FaFacebookF, FaTwitter, FaWhatsapp } from "react-icons/fa";
-import universidadLogo from "../../assets/logo-upg.png";
+import universidadLogo from "../../assets/logo-upg.webp";
 import LogoutConfirmModal from "../modals/LogoutConfirmModal";
 
 function Header() {

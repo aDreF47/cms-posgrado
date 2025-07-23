@@ -1,14 +1,18 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../layout/LoadingSpinner';
 
 const PublicRoute = () => {
-  const { isAuthenticated, userType, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
 
-  if (loading) {
+  // Solo mostrar loading si:
+  // 1. Está cargando
+  // 2. Y NO está en la página de login (para evitar doble loading)
+  if (loading && location.pathname !== '/login') {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-100">
-        <LoadingSpinner size="lg" message="Cargando..." />
+        <LoadingSpinner size="lg" message="Verificando sesión..." />
       </div>
     );
   }
@@ -18,7 +22,7 @@ const PublicRoute = () => {
     return <Navigate to="/home" replace />;
   }
 
-  // Si no está autenticado, mostrar la página pública (login)
+  // Mostrar página pública (login)
   return <Outlet />;
 };
 
