@@ -50,7 +50,7 @@ const TestimonialsSection = () => {
         </div>
         
         {/* Estadísticas de satisfacción */}
-        <div className="mt-16 bg-white rounded-2xl p-8 shadow-lg">
+        {/* <div className="mt-16 bg-white rounded-2xl p-8 shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div>
               <div className="text-4xl font-bold text-[#A41E22] mb-2">98%</div>
@@ -65,7 +65,7 @@ const TestimonialsSection = () => {
               <div className="text-gray-600">Años de Experiencia</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

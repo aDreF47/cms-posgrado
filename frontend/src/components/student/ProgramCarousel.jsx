@@ -4,32 +4,42 @@ import programasPosgrado from "../../data/programas";
 
 const ProgramCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const nextSlide = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
     setCurrentIndex((prev) => (prev + 1) % programasPosgrado.length);
+    setTimeout(() => setIsTransitioning(false), 700); // Duración de la transición
   };
 
   const prevSlide = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
     setCurrentIndex(
       (prev) => (prev - 1 + programasPosgrado.length) % programasPosgrado.length
     );
+    setTimeout(() => setIsTransitioning(false), 700);
   };
 
-  const getVisibleCards = () => {
-    const cards = [];
-    for (let i = -1; i <= 1; i++) {
-      const index =
-        (currentIndex + i + programasPosgrado.length) %
-        programasPosgrado.length;
-      cards.push({
-        ...programasPosgrado[index],
-        position: i,
-      });
+  const goToSlide = (index) => {
+    if (isTransitioning || index === currentIndex) return;
+    setIsTransitioning(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 700);
+  };
+
+  // Obtener índices de cards visibles (centro y adyacentes)
+  const getVisibleIndices = () => {
+    const indices = [];
+    for (let i = -2; i <= 2; i++) {
+      const index = (currentIndex + i + programasPosgrado.length) % programasPosgrado.length;
+      indices.push(index);
     }
-    return cards;
+    return indices;
   };
 
-  const visibleCards = getVisibleCards();
+  const visibleIndices = getVisibleIndices();
 
   return (
     <section className="py-20 bg-white">
@@ -47,17 +57,21 @@ const ProgramCarousel = () => {
 
         {/* Carousel */}
         <div className="relative">
-          {/* Cards Container - Fixed Center Focus */}
+          {/* Cards Container - Optimized Rendering */}
           <div className="flex items-center justify-center relative h-[500px] overflow-hidden">
-            {programasPosgrado.map((programa, index) => {
-              const offset = index - currentIndex;
+            {visibleIndices.map((programIndex, displayIndex) => {
+              const programa = programasPosgrado[programIndex];
+              const offset = displayIndex - 2; // Centro está en índice 2
               const isCenter = offset === 0;
               const absOffset = Math.abs(offset);
 
+              // Solo renderizar si está dentro del rango visible
+              if (absOffset > 2) return null;
+
               return (
                 <div
-                  key={programa.id}
-                  className={`absolute transition-all duration-700 ease-out ${
+                  key={`${programa.id}-${programIndex}`} // Key basado en programa y posición
+                  className={`absolute transition-all duration-700 ease-in-out ${
                     isCenter
                       ? "w-80 h-[450px] z-20 scale-100 opacity-100"
                       : absOffset === 1
@@ -65,12 +79,15 @@ const ProgramCarousel = () => {
                       : "w-56 h-[320px] z-0 scale-75 opacity-30"
                   }`}
                   style={{
-                    transform: `translateX(${offset * 300}px)`,
+                    transform: `translateX(${offset * 280}px) scale(${
+                      isCenter ? 1 : absOffset === 1 ? 0.9 : 0.75
+                    })`,
                     filter: isCenter
                       ? "blur(0px)"
                       : absOffset === 1
                       ? "blur(1px)"
                       : "blur(2px)",
+                    transition: "all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
                   }}
                 >
                   <div
@@ -176,7 +193,8 @@ const ProgramCarousel = () => {
           {/* Navigation Arrows */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-30 group"
+            disabled={isTransitioning}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-30 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg
               className="w-5 h-5 text-gray-700 group-hover:text-[#880E1F] transition-colors"
@@ -195,7 +213,8 @@ const ProgramCarousel = () => {
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-30 group"
+            disabled={isTransitioning}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors z-30 group disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg
               className="w-5 h-5 text-gray-700 group-hover:text-[#880E1F] transition-colors"
@@ -218,8 +237,9 @@ const ProgramCarousel = () => {
           {programasPosgrado.map((_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              onClick={() => goToSlide(index)}
+              disabled={isTransitioning}
+              className={`w-2 h-2 rounded-full transition-all duration-300 disabled:cursor-not-allowed ${
                 index === currentIndex
                   ? "bg-[#880E1F] w-6"
                   : "bg-gray-300 hover:bg-gray-400"
