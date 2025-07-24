@@ -5,7 +5,7 @@ import PublicRoute from './components/auth/PublicRoute'; // ← NUEVO
 import Layout from './components/layout/Layout';
 import StudentLoginPage from './pages/auth/Login/StudentLoginPage';
 import HomeStudent from './pages/student/HomeStudent';
-import MatriculaPage from './pages/student/MatriculaPage';
+import AdmisionPage from './pages/student/AdmisionPage';
 import TramitesPage from './pages/student/TramitesPage';
 import GuiasPage from './pages/student/GuiasPage';
 import TarifarioPage from './pages/student/TarifarioPage';
@@ -27,7 +27,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/home" element={<HomeStudent />} />
-              <Route path="/matricula" element={<MatriculaPage />} />
+              <Route path="/admision" element={<AdmisionPage />} />
               <Route path="/tramites" element={<TramitesPage />} />
               <Route path="/guias" element={<GuiasPage />} />
               <Route path="/tarifario" element={<TarifarioPage />} />
