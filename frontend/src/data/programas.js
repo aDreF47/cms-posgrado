@@ -1,13 +1,13 @@
 const programasPosgrado = [
   {
     "id": 1,
-    "name": "Magíster en Didáctica de la comunicación e innovación",
+    "name": "Maestría Profesional en Didáctica de la comunicación e innovación",
     "description": "Este programa de maestría profesional está diseñado para capacitar a los docentes en la didáctica de la comunicación, incorporando innovaciones pedagógicas y tecnológicas para mejorar el proceso de enseñanza-aprendizaje.",
     "duration": "1 año (2 semestres)",
     "modalidad": "Semipresencial",
     "imagen": "https://52ideasbrillantes.com/wp-content/uploads/2024/02/Vence-todos-los-retos-de-un-posgrado-1140x760.png",
     "vacantes": 50,
-    "icon": "💬"
+    "url": "https://posgradoeducacion.unmsm.edu.pe/programas/maestrias/maestria-profesional-en-didactica-de-la-comunicacion-e-innovacion"
   },
   {
     "id": 2,
@@ -17,7 +17,7 @@ const programasPosgrado = [
     "modalidad": "Semipresencial",
     "imagen": "https://portal.andina.pe/EDPFotografia3/thumbnail/2022/03/14/000853401w.jpg",
     "vacantes": 40,
-    "icon": "📐"
+    "url": "https://posgradoeducacion.unmsm.edu.pe/programas/maestrias/maestria-profesional-en-didactica-en-la-matematica"
   },
   {
     "id": 3,
@@ -27,7 +27,7 @@ const programasPosgrado = [
     "modalidad": "Semipresencial y presencial",
     "imagen": "https://www.minedu.gob.pe/superiorpedagogica/wp-content/uploads/2019/05/nota_instrumentos2a.png",
     "vacantes": 50,
-    "icon": "🎯"
+    "url": "https://posgradoeducacion.unmsm.edu.pe/programas/maestrias/maestria-en-educacion-con-mencion-en-gestion-de-la-educacion"
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@ const programasPosgrado = [
     "modalidad": "Semipresencial y presencial",
     "imagen": "https://posgradoeducacion.unmsm.edu.pe/_next/image?url=https%3A%2F%2Funmsm-web-static-files.s3.sa-east-1.amazonaws.com%2Ffac-educacion%2Fmaestria-docencia-universitaria-minihome.png&w=640&q=75",
     "vacantes": 45,
-    "icon": "🎓"
+    "url": "https://posgradoeducacion.unmsm.edu.pe/programas/maestrias/maestria-en-educacion-con-mencion-en-docencia-universitaria"
   },
   {
     "id": 5,
@@ -47,7 +47,7 @@ const programasPosgrado = [
     "modalidad": "Semipresencial",
     "imagen": "https://postgrado.une.edu.pe/img/img26.jpg",
     "vacantes": 30,
-    "icon": "✅"
+    "url": "https://posgradoeducacion.unmsm.edu.pe/programas/maestrias/maestria-en-educacion-con-mencion-en-evaluacion-y-acreditacion-de-la-calidad-de-la-educacion"
   },
   {
     "id": 6,
@@ -57,7 +57,7 @@ const programasPosgrado = [
     "modalidad": "Presencial",
     "imagen": "https://www.semana.com/resizer/0ENqDgscxbCqE23H46tc8eMZh68=/arc-anglerfish-arc2-prod-semana/public/U4TKD3BYOFCY7EKZFL54XIE6QQ.jpg",
     "vacantes": 40,
-    "icon": "🔬"
+    "url": "https://posgradoeducacion.unmsm.edu.pe/programas/doctorado"
   }
 ]
 

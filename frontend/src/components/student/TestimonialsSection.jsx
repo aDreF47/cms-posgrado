@@ -38,13 +38,13 @@ const TestimonialsSection = () => {
               </div>
               
               {/* Estrellas decorativas */}
-              <div className="absolute top-4 right-6">
+              {/* <div className="absolute top-4 right-6">
                 <div className="flex text-yellow-400">
                   {[...Array(5)].map((_, i) => (
                     <span key={i} className="text-sm">★</span>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>

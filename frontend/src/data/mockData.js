@@ -189,43 +189,103 @@ export const systemFeatures = [
   }
 ]
 
-// Datos mock para proceso de matrícula
+// Datos mock para cronograma de admisión 2025-II (basado en info real UNMSM)
 export const enrollmentProcess = [
   {
     id: 1,
     step: 1,
-    title: "Inscripción Online",
-    date: "15 Feb - 28 Feb",
-    duration: "2 semanas",
-    icon: "📝",
-    status: "completed"
+    title: "Inscripción y Pago",
+    date: "15 Jul - 08 Ago",
+    duration: "3 semanas",
+    icon: "💳",
+    status: "active",
+    description: "Pago por derecho de inscripción a través de San Market UNMSM (BCP o Yape)",
+    requirements: ["Pago de inscripción", "Registro en plataforma virtual"]
   },
   {
     id: 2,
     step: 2,
-    title: "Evaluación de Expediente",
-    date: "1 Mar - 15 Mar",
-    duration: "2 semanas", 
-    icon: "📊",
-    status: "active"
+    title: "Envío de Expediente",
+    date: "09 Ago - 15 Ago",
+    duration: "1 semana",
+    icon: "📋",
+    status: "pending",
+    description: "Envío de documentos completos al email de la Unidad de Posgrado",
+    requirements: ["Certificado SUNEDU", "DNI", "Certificado de idioma", "Expediente completo"]
   },
   {
     id: 3,
     step: 3,
-    title: "Entrevista Personal",
-    date: "18 Mar - 25 Mar",
+    title: "Examen de Aptitud",
+    date: "20 Ago - 25 Ago",
     duration: "1 semana",
-    icon: "👥",
-    status: "pending"
+    icon: "📝",
+    status: "pending",
+    description: "Evaluación de conocimientos según programa (Maestría o Doctorado)",
+    requirements: ["Código de postulante", "Presentarse en fecha asignada"]
   },
   {
     id: 4,
     step: 4,
-    title: "Confirmación de Admisión",
-    date: "28 Mar - 5 Abr",
+    title: "Evaluación y Resultados",
+    date: "28 Ago - 05 Sep",
     duration: "1 semana",
     icon: "🎓",
-    status: "pending"
+    status: "pending",
+    description: "Evaluación de expediente y publicación de resultados de admisión",
+    requirements: ["Completar todos los pasos anteriores"]
+  }
+]
+
+// Datos mock específicos para proceso de matrícula (post-admisión)
+export const matriculaProcess = [
+  {
+    id: 1,
+    step: 1,
+    title: "Pago de Matrícula",
+    date: "10 Sep - 20 Sep",
+    duration: "10 días",
+    icon: "💰",
+    status: "pending",
+    description: "Pago en Banco Financiero - Dos recibos: UPG (S/.258) + EPG (S/.52)",
+    amount: "S/. 310.00",
+    accounts: [
+      { name: "Unidad de Posgrado (UPG)", code: "172-010", amount: "S/. 258.00" },
+      { name: "Escuela de Posgrado (EPG)", code: "207-010", amount: "S/. 52.00" }
+    ]
+  },
+  {
+    id: 2,
+    step: 2,
+    title: "Matrícula en Cursos",
+    date: "21 Sep - 25 Sep",
+    duration: "5 días",
+    icon: "📚",
+    status: "pending",
+    description: "Selección de asignaturas a través del Sistema Único de Matrícula",
+    requirements: ["Comprobante de pago de matrícula", "Asesoría académica"]
+  },
+  {
+    id: 3,
+    step: 3,
+    title: "Confirmación de Matrícula",
+    date: "26 Sep - 28 Sep",
+    duration: "3 días",
+    icon: "✅",
+    status: "pending",
+    description: "Validación final y emisión de constancia de matrícula",
+    requirements: ["Cursos seleccionados", "Pagos completos"]
+  },
+  {
+    id: 4,
+    step: 4,
+    title: "Inicio de Clases",
+    date: "02 Oct",
+    duration: "Inicio",
+    icon: "🎓",
+    status: "pending",
+    description: "Comienzo del semestre académico 2025-II",
+    requirements: ["Matrícula confirmada", "Acceso a aulas virtuales"]
   }
 ]
 

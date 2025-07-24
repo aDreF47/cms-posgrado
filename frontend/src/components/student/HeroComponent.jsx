@@ -11,7 +11,8 @@ const heroSlides = [
     backgroundImage:
       "https://elcomercio-diariocorreo-prod.web.arc-cdn.net/resizer/v2/GFHCCM5GE5CNRHIPQLK5EQ5PJE.jpg?auth=7f5cb4b5bd661025807b4deab4a9e88919d54b6b6a04fa2f6cf722818268dec2&width=1200&height=800&smart=true&quality=75",
     accent: "Educación",
-    buttonText: "Descubre Más",
+    buttonText: "",
+    url: "https://posgradoeducacion.unmsm.edu.pe/programas",
   },
   {
     id: 2,
@@ -23,10 +24,11 @@ const heroSlides = [
       "https://posgradoeducacion.unmsm.edu.pe/_next/image?url=https%3A%2F%2Funmsm-static-files.s3.us-east-2.amazonaws.com%2Feducacion%2Fbackgroundinicio%2Fsustentacion-posgrado-educacion-3.jpg&w=3840&q=100",
     accent: "Maestría",
     buttonText: "Conoce Más",
+    url: "https://posgradoeducacion.unmsm.edu.pe/programas/maestrias",
   },
   {
     id: 3,
-    title: "Programas de",
+    title: "Programa de",
     subtitle: "Doctorado",
     description:
       "Alcanza el más alto nivel académico con nuestros programas de doctorado en educación.",
@@ -34,18 +36,20 @@ const heroSlides = [
       "https://posgradoeducacion.unmsm.edu.pe/_next/image?url=https%3A%2F%2Fposgrado-unmsm.s3.sa-east-1.amazonaws.com%2Fdoctorado_en_educacion_y_docencia_universitaria_df26a7e521.png&w=3840&q=75",
     accent: "Doctorado",
     buttonText: "Explora Más",
+    url: "https://posgradoeducacion.unmsm.edu.pe/programas/doctorado",
   },
-  {
-    id: 4,
-    title: "Especialización en",
-    subtitle: "Pedagogía",
-    description:
-      "Desarrolla competencias pedagógicas avanzadas para liderar procesos de innovación educativa.",
-    backgroundImage:
-      "https://unmsm-static-files.s3.us-east-2.amazonaws.com/whatsapp-image%202024-01-10%20at%202-1704915984822.jpeg",
-    accent: "Pedagogía",
-    buttonText: "Descubre Más",
-  },
+  // {
+  //   id: 4,
+  //   title: "Especialización en",
+  //   subtitle: "Pedagogía",
+  //   description:
+  //     "Desarrolla competencias pedagógicas avanzadas para liderar procesos de innovación educativa.",
+  //   backgroundImage:
+  //     "https://unmsm-static-files.s3.us-east-2.amazonaws.com/whatsapp-image%202024-01-10%20at%202-1704915984822.jpeg",
+  //   accent: "Pedagogía",
+  //   buttonText: "Descubre Más",
+  //   url: "https://posgradoeducacion.unmsm.edu.pe/programas",
+  // },
 ];
 
 function AcademicHeroCarousel() {
@@ -362,35 +366,40 @@ function AcademicHeroCarousel() {
                       </p>
 
                       {/* Botón CTA */}
-                      <div className={`${index === currentSlide ? 'slide-button-enter' : ''}`}>
-                        <button className="group relative inline-flex items-center gap-3 bg-[#A41E22] text-white px-8 py-4 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all duration-500 hover:bg-[#8A1A1D] hover:-translate-y-2 hover:scale-105 transform-gpu overflow-hidden cursor-pointer">
-                          {/* Efecto de onda al hover */}
-                          <div className="absolute inset-0 bg-gradient-to-r from-[#A41E22] to-[#8A1A1D] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                          {/* Texto del botón */}
-                          <span className="relative z-10 transition-transform duration-300">
-                            {slide.buttonText}
-                          </span>
-
-                          {/* Ícono flecha */}
-                          <svg
-                            className="relative z-10 w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                      {slide.buttonText && slide.buttonText.trim() !== "" && (
+                        <div className={`${index === currentSlide ? 'slide-button-enter' : ''}`}>
+                          <button 
+                            onClick={() => window.open(slide.url, '_blank')}
+                            className="group relative inline-flex items-center gap-3 bg-[#A41E22] text-white px-8 py-4 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all duration-500 hover:bg-[#8A1A1D] hover:-translate-y-2 hover:scale-105 transform-gpu overflow-hidden cursor-pointer"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 8l4 4m0 0l-4 4m4-4H3"
-                            />
-                          </svg>
+                            {/* Efecto de onda al hover */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#A41E22] to-[#8A1A1D] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                          {/* Efecto ripple */}
-                          <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-30 group-hover:animate-ping bg-white transition-opacity duration-300" />
-                        </button>
-                      </div>
+                            {/* Texto del botón */}
+                            <span className="relative z-10 transition-transform duration-300">
+                              {slide.buttonText}
+                            </span>
+
+                            {/* Ícono flecha */}
+                            <svg
+                              className="relative z-10 w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M17 8l4 4m0 0l-4 4m4-4H3"
+                              />
+                            </svg>
+
+                            {/* Efecto ripple */}
+                            <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-30 group-hover:animate-ping bg-white transition-opacity duration-300" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

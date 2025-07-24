@@ -47,7 +47,7 @@ const ProgramCarousel = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Programas de Posgrado
+            Nuestros Programas de Posgrado
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Descubre nuestros programas académicos diseñados para tu crecimiento
@@ -108,17 +108,12 @@ const ProgramCarousel = () => {
                           e.target.nextSibling.style.display = "flex";
                         }}
                       />
-                      <div
-                        className="w-full h-full bg-gradient-to-br from-[#880E1F] to-red-800 items-center justify-center text-4xl text-white absolute inset-0"
-                        style={{ display: "none" }}
-                      >
-                        {programa.icon}
-                      </div>
+                      
 
                       {/* Vacantes badge */}
-                      <div className="absolute top-3 right-3 bg-white/90 px-2 py-1 rounded-full text-xs font-semibold text-[#880E1F]">
+                      {/* <div className="absolute top-3 right-3 bg-white/90 px-2 py-1 rounded-full text-xs font-semibold text-[#880E1F]">
                         {programa.vacantes} vacantes
-                      </div>
+                      </div> */}
                     </div>
 
                     {/* Content */}
@@ -177,6 +172,7 @@ const ProgramCarousel = () => {
 
                       {/* Button */}
                       <button
+                        onClick={() => window.open(programa.url, '_blank')}
                         className={`w-full bg-[#880E1F] text-white rounded-lg hover:bg-red-800 transition-colors font-medium ${
                           isCenter ? "py-3 text-sm" : "py-2 text-xs"
                         }`}
