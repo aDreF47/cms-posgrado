@@ -52,14 +52,17 @@ function AcademicHeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [scrollY, setScrollY] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const intervalRef = useRef(null);
 
   // Auto-play del carrusel
   useEffect(() => {
     if (isPlaying) {
       intervalRef.current = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-      }, 20000); // Cambia cada 5 segundos
+        handleSlideChange((prev) => (prev + 1) % heroSlides.length);
+      }, 10000); // 5 segundos
     }
 
     return () => {
@@ -76,18 +79,74 @@ function AcademicHeroCarousel() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Función mejorada para manejar cambios de slide
+  const handleSlideChange = (newSlideOrFunction, resetTimer = false) => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    
+    // Reset del timer si se especifica
+    if (resetTimer && intervalRef.current) {
+      clearInterval(intervalRef.current);
+      
+      // Reiniciar el timer si está en modo auto-play
+      if (isPlaying) {
+        intervalRef.current = setInterval(() => {
+          handleSlideChange((prev) => (prev + 1) % heroSlides.length);
+        }, 10000);
+      }
+    }
+    
+    if (typeof newSlideOrFunction === 'function') {
+      setCurrentSlide(newSlideOrFunction);
+    } else {
+      setCurrentSlide(newSlideOrFunction);
+    }
+    
+    // Reset transition state after animation completes
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 200);
+  };
+
   const goToSlide = (index) => {
-    setCurrentSlide(index);
+    if (index !== currentSlide) {
+      handleSlideChange(index, true); // Reset timer en navegación manual
+    }
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    handleSlideChange((prev) => (prev + 1) % heroSlides.length, true); // Reset timer
   };
 
   const prevSlide = () => {
-    setCurrentSlide(
-      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length
-    );
+    handleSlideChange((prev) => (prev - 1 + heroSlides.length) % heroSlides.length, true); // Reset timer
+  };
+
+  // Funciones para eventos táctiles (swipe)
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSlide(); // Ya incluye reset del timer
+    } else if (isRightSwipe) {
+      prevSlide(); // Ya incluye reset del timer
+    }
   };
 
   return (
@@ -95,8 +154,7 @@ function AcademicHeroCarousel() {
       {/* CSS personalizado para animaciones académicas */}
       <style jsx>{`
         @keyframes academicFloat {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateY(0px) rotate(0deg);
           }
           50% {
@@ -105,20 +163,13 @@ function AcademicHeroCarousel() {
         }
 
         @keyframes bookFlip {
-          0% {
-            transform: rotateY(0deg);
-          }
-          50% {
-            transform: rotateY(180deg);
-          }
-          100% {
-            transform: rotateY(360deg);
-          }
+          0% { transform: rotateY(0deg); }
+          50% { transform: rotateY(180deg); }
+          100% { transform: rotateY(360deg); }
         }
 
         @keyframes graduationCap {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateY(0px) rotate(-5deg);
           }
           50% {
@@ -126,45 +177,36 @@ function AcademicHeroCarousel() {
           }
         }
 
-        @keyframes slideInRight {
+        @keyframes slideInFromRight {
           0% {
             opacity: 0;
-            transform: translateX(100px) translateY(30px);
+            transform: translateX(60px);
           }
           100% {
             opacity: 1;
-            transform: translateX(0) translateY(0);
+            transform: translateX(0);
           }
         }
 
-        @keyframes slideInLeft {
+        @keyframes slideInFromLeft {
           0% {
             opacity: 0;
-            transform: translateX(-100px) translateY(30px);
+            transform: translateX(-60px);
           }
           100% {
             opacity: 1;
-            transform: translateX(0) translateY(0);
+            transform: translateX(0);
           }
         }
 
         @keyframes fadeInUp {
           0% {
             opacity: 0;
-            transform: translateY(40px);
+            transform: translateY(30px);
           }
           100% {
             opacity: 1;
             transform: translateY(0);
-          }
-        }
-
-        @keyframes shimmerText {
-          0% {
-            background-position: -200% center;
-          }
-          100% {
-            background-position: 200% center;
           }
         }
 
@@ -180,51 +222,57 @@ function AcademicHeroCarousel() {
           animation: graduationCap 4s ease-in-out infinite;
         }
 
-        .slide-in-right {
-          animation: slideInRight 1s ease-out forwards;
+        .slide-content-enter {
+          animation: slideInFromRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
 
-        .slide-in-left {
-          animation: slideInLeft 1s ease-out forwards;
+        .slide-subtitle-enter {
+          animation: slideInFromLeft 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          animation-delay: 0.1s;
         }
 
-        .fade-in-up {
-          animation: fadeInUp 1s ease-out forwards;
+        .slide-description-enter {
+          animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          animation-delay: 0.2s;
         }
 
-        .shimmer-text {
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.4),
-            transparent
-          );
-          background-size: 200% 100%;
-          animation: shimmerText 3s infinite;
+        .slide-button-enter {
+          animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          animation-delay: 0.3s;
         }
 
         .text-shadow-strong {
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7),
-            0 0 20px rgba(0, 0, 0, 0.5);
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
-        .backdrop-blur-strong {
-          backdrop-filter: blur(12px) saturate(180%);
-          background: rgba(0, 0, 0, 0.3);
+        .content-container {
+          min-height: 400px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
 
         .slide-transition {
-          transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .background-transition {
+          transition: opacity 0.8s ease-in-out;
         }
       `}</style>
 
       {/* Hero Section Principal */}
-      <div className="relative min-h-screen overflow-hidden">
-        {/* Backgrounds con transición */}
+      <div 
+        className="relative min-h-screen overflow-hidden select-none"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        {/* Backgrounds con transición suave */}
         {heroSlides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+            className={`absolute inset-0 bg-cover bg-center background-transition ${
               index === currentSlide ? "opacity-100" : "opacity-0"
             }`}
             style={{
@@ -284,66 +332,68 @@ function AcademicHeroCarousel() {
 
               {/* Lado derecho - Texto y contenido */}
               <div className="lg:text-left text-center select-none">
-                {heroSlides.map((slide, index) => (
-                  <div
-                    key={slide.id}
-                    className={`transition-all duration-800 ${
-                      index === currentSlide
-                        ? "opacity-100 transform translate-x-0"
-                        : "opacity-0 transform translate-x-10 absolute"
-                    }`}
-                  >
-                    {/* Título principal */}
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-white leading-tight mb-6 text-shadow-strong">
-                      <span className="inline-block slide-in-right">
-                        {slide.title}
-                      </span>
-                      <br />
-                      <span className="font-bold text-white inline-block slide-in-left">
-                        {slide.subtitle}
-                      </span>
-                    </h1>
-
-                    {/* Descripción */}
-                    <p className="text-white/90 text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl leading-relaxed font-light fade-in-up text-shadow-strong">
-                      {slide.description}
-                    </p>
-
-                    {/* Botón CTA */}
+                <div className="content-container">
+                  {heroSlides.map((slide, index) => (
                     <div
-                      className="fade-in-up "
-                      style={{ animationDelay: "0.5s" }}
+                      key={`slide-${slide.id}-${currentSlide}`}
+                      className={`slide-transition ${
+                        index === currentSlide
+                          ? "opacity-100 transform translate-x-0 relative"
+                          : "opacity-0 transform translate-x-10 absolute top-0 left-0 right-0"
+                      }`}
+                      style={{
+                        visibility: index === currentSlide ? 'visible' : 'hidden',
+                      }}
                     >
-                      <button className="group relative inline-flex items-center gap-3 bg-[#A41E22] text-white px-8 py-4 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all duration-500 hover:bg-[#8A1A1D] hover:-translate-y-2 hover:scale-105 transform-gpu overflow-hidden group-hover:animate-pulse cursor-pointer">
-                        {/* Efecto de onda al hover */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#A41E22] to-[#8A1A1D] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                        {/* Texto del botón */}
-                        <span className="relative z-10 transition-transform duration-300 ">
-                          {slide.buttonText}
+                      {/* Título principal */}
+                      <h1 className="text-4xl md:text-6xl lg:text-7xl font-light text-white leading-tight mb-6 text-shadow-strong">
+                        <span className={`inline-block ${index === currentSlide ? 'slide-content-enter' : ''}`}>
+                          {slide.title}
                         </span>
+                        <br />
+                        <span className={`font-bold text-white inline-block ${index === currentSlide ? 'slide-subtitle-enter' : ''}`}>
+                          {slide.subtitle}
+                        </span>
+                      </h1>
 
-                        {/* Ícono flecha */}
-                        <svg
-                          className="relative z-10 w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"
-                          />
-                        </svg>
+                      {/* Descripción */}
+                      <p className={`text-white/90 text-lg md:text-xl lg:text-2xl mb-8 max-w-2xl leading-relaxed font-light text-shadow-strong ${index === currentSlide ? 'slide-description-enter' : ''}`}>
+                        {slide.description}
+                      </p>
 
-                        {/* Efecto ripple */}
-                        <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-30 group-hover:animate-ping bg-white transition-opacity duration-300" />
-                      </button>
+                      {/* Botón CTA */}
+                      <div className={`${index === currentSlide ? 'slide-button-enter' : ''}`}>
+                        <button className="group relative inline-flex items-center gap-3 bg-[#A41E22] text-white px-8 py-4 rounded-lg text-sm font-semibold uppercase tracking-wider transition-all duration-500 hover:bg-[#8A1A1D] hover:-translate-y-2 hover:scale-105 transform-gpu overflow-hidden cursor-pointer">
+                          {/* Efecto de onda al hover */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-[#A41E22] to-[#8A1A1D] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                          {/* Texto del botón */}
+                          <span className="relative z-10 transition-transform duration-300">
+                            {slide.buttonText}
+                          </span>
+
+                          {/* Ícono flecha */}
+                          <svg
+                            className="relative z-10 w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            />
+                          </svg>
+
+                          {/* Efecto ripple */}
+                          <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-30 group-hover:animate-ping bg-white transition-opacity duration-300" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -352,10 +402,11 @@ function AcademicHeroCarousel() {
         {/* Controles del carrusel */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
           <div className="flex items-center space-x-6">
-            {/* Botón anterior */}
+            {/* Botón anterior - Solo desktop */}
             <button
               onClick={prevSlide}
-              className="p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 cursor-pointer"
+              disabled={isTransitioning}
+              className="hidden sm:block p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
                 className="w-5 h-5"
@@ -378,7 +429,8 @@ function AcademicHeroCarousel() {
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  disabled={isTransitioning}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 disabled:cursor-not-allowed ${
                     index === currentSlide
                       ? "bg-white scale-125"
                       : "bg-white/50 hover:bg-white/75"
@@ -387,10 +439,11 @@ function AcademicHeroCarousel() {
               ))}
             </div>
 
-            {/* Botón siguiente */}
+            {/* Botón siguiente - Solo desktop */}
             <button
               onClick={nextSlide}
-              className="p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 cursor-pointer"
+              disabled={isTransitioning}
+              className="hidden sm:block p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-300 hover:scale-110 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg
                 className="w-5 h-5"
@@ -407,10 +460,10 @@ function AcademicHeroCarousel() {
               </svg>
             </button>
 
-            {/* Botón play/pause */}
+            {/* Botón play/pause - Solo en desktop */}
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
+              className="hidden sm:block p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-all duration-300 hover:scale-110"
             >
               {isPlaying ? (
                 <svg
@@ -445,12 +498,9 @@ function AcademicHeroCarousel() {
           </div>
         </div>
 
-        {/* Indicador de scroll */}
-        <div
-          className="absolute bottom-8 right-8 z-20 fade-in-up"
-          style={{ animationDelay: "1s" }}
-        >
-          <div className="flex flex-col items-center text-white/70 hover:text-white transition-colors duration-300 ">
+        {/* Indicador de scroll - Desktop */}
+        <div className="absolute bottom-8 right-8 z-20 hidden sm:block">
+          <div className="flex flex-col items-center text-white/70 hover:text-white transition-colors duration-300">
             <span className="text-sm mb-2 font-light tracking-wide select-none">
               Explorar
             </span>

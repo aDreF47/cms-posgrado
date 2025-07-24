@@ -1,15 +1,5 @@
 const programasPosgrado = [
   {
-    "id": 0,
-    "name": "Magister Karla huamani",
-    "description": "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    "duration": "Prue de de acceso",
-    "modalidad": "Prueba de acceso",
-    "imagen": "  https://media.licdn.com/dms/image/v2/D4E03AQFFE5_CZhNTZQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1728351666863?e=2147483647&v=beta&t=svtqavLYde-ReyHGGwdBhLmLqG-yXpoYWUg7jkW89JU",
-    "vacantes": 50,
-    "icon": "💬"
-  },
-  {
     "id": 1,
     "name": "Magíster en Didáctica de la comunicación e innovación",
     "description": "Este programa de maestría profesional está diseñado para capacitar a los docentes en la didáctica de la comunicación, incorporando innovaciones pedagógicas y tecnológicas para mejorar el proceso de enseñanza-aprendizaje.",

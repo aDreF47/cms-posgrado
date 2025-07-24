@@ -77,7 +77,7 @@ function Header() {
             <img
               src={universidadLogo}
               alt="Logo"
-              className="h-16 w-16 rounded-full object-cover bg-white p-1"
+              className="h-14 w-14 rounded-full object-cover bg-white p-1"
             />
             <span className="text-3xl font-bold ml-3">Posgrado</span>
           </Link>

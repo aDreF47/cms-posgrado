@@ -142,3 +142,120 @@ export const findUserByCredentials = (username, password) => {
 export const validateStudentCode = (code) => {
   return code === mockDatabase.config.studentAccessCode
 }
+
+// Datos mock para funcionalidades del sistema
+export const systemFeatures = [
+  {
+    id: 1,
+    icon: "📊",
+    title: "Gestión de Expedientes",
+    description: "Control completo de expedientes académicos, historial de calificaciones y seguimiento del progreso estudiantil.",
+    category: "academico"
+  },
+  {
+    id: 2,
+    icon: "📅",
+    title: "Planificación Académica",
+    description: "Herramientas para programar cursos, asignar profesores y gestionar horarios de manera eficiente.",
+    category: "planificacion"
+  },
+  {
+    id: 3,
+    icon: "💰",
+    title: "Control Financiero",
+    description: "Seguimiento de pagos, becas, y control financiero integral de estudiantes y programas.",
+    category: "financiero"
+  },
+  {
+    id: 4,
+    icon: "📝",
+    title: "Gestión de Tesis",
+    description: "Seguimiento completo del proceso de tesis desde la propuesta hasta la defensa final.",
+    category: "academico"
+  },
+  {
+    id: 5,
+    icon: "📈",
+    title: "Reportes y Análisis",
+    description: "Generación de reportes detallados y análisis estadísticos para la toma de decisiones.",
+    category: "reportes"
+  },
+  {
+    id: 6,
+    icon: "🔐",
+    title: "Seguridad y Permisos",
+    description: "Sistema robusto de seguridad con roles y permisos personalizables para cada usuario.",
+    category: "seguridad"
+  }
+]
+
+// Datos mock para proceso de matrícula
+export const enrollmentProcess = [
+  {
+    id: 1,
+    step: 1,
+    title: "Inscripción Online",
+    date: "15 Feb - 28 Feb",
+    duration: "2 semanas",
+    icon: "📝",
+    status: "completed"
+  },
+  {
+    id: 2,
+    step: 2,
+    title: "Evaluación de Expediente",
+    date: "1 Mar - 15 Mar",
+    duration: "2 semanas", 
+    icon: "📊",
+    status: "active"
+  },
+  {
+    id: 3,
+    step: 3,
+    title: "Entrevista Personal",
+    date: "18 Mar - 25 Mar",
+    duration: "1 semana",
+    icon: "👥",
+    status: "pending"
+  },
+  {
+    id: 4,
+    step: 4,
+    title: "Confirmación de Admisión",
+    date: "28 Mar - 5 Abr",
+    duration: "1 semana",
+    icon: "🎓",
+    status: "pending"
+  }
+]
+
+// Datos mock para testimonios de egresados
+export const testimonials = [
+  {
+    id: 1,
+    quote: "La maestría me dio las herramientas necesarias para liderar cambios significativos en mi institución. El enfoque práctico y la calidad de los profesores fueron excepcionales.",
+    author: "María Rodríguez",
+    position: "Directora Académica - Colegio San José",
+    initials: "MR",
+    program: "Maestría en Gestión Educativa",
+    year: "2023"
+  },
+  {
+    id: 2,
+    quote: "El doctorado me permitió desarrollar investigación de alto impacto. Hoy soy referente en mi área gracias a la formación recibida y el apoyo constante del cuerpo docente.",
+    author: "Dr. Juan López",
+    position: "Investigador Senior - Universidad Nacional",
+    initials: "JL",
+    program: "Doctorado en Educación",
+    year: "2022"
+  },
+  {
+    id: 3,
+    quote: "La modalidad virtual fue perfecta para mi situación. Pude estudiar mientras trabajaba, y la plataforma tecnológica facilitó todo el proceso de aprendizaje.",
+    author: "Ana Sánchez",
+    position: "Coordinadora Pedagógica - Ministerio de Educación",
+    initials: "AS",
+    program: "Maestría en Tecnología Educativa",
+    year: "2024"
+  }
+]
