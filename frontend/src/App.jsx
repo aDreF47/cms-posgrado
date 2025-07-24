@@ -11,6 +11,7 @@ import GuiasPage from './pages/student/GuiasPage';
 import TarifarioPage from './pages/student/TarifarioPage';
 import DocentesPage from './pages/student/DocentesPage';
 import ToasterProvider from './components/ui/ToasterProvider';
+import InformacionFinancieraPage from './pages/student/InformacionFinancieraPage'; 
 
 function App() {
   return (
@@ -28,8 +29,16 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/home" element={<HomeStudent />} />
               <Route path="/admision" element={<AdmisionPage />} />
+              <Route path="/informacion-financiera" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/oficiales" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/pagos" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/becas" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/calendario" element={<InformacionFinancieraPage />} />
               <Route path="/tramites" element={<TramitesPage />} />
-              <Route path="/guias" element={<GuiasPage />} />
+              <Route path="/tramites/matricula" element={<TramitesPage />} />
+              <Route path="/tramites/certificados" element={<TramitesPage />} />
+              <Route path="/tramites/modificacion" element={<TramitesPage />} />
+              <Route path="/tramites/grado" element={<TramitesPage />} />
               <Route path="/tarifario" element={<TarifarioPage />} />
               <Route path="/docentes" element={<DocentesPage />} />
             </Route>
