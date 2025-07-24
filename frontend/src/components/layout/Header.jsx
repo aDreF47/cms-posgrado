@@ -436,51 +436,9 @@ function Header() {
             </div>
 
             {/* Plana Docente Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('docentes')}
-                className="flex items-center gap-1 hover:text-gray-300 transition-colors"
-                aria-expanded={dropdownOpen.docentes}
-                aria-haspopup="true"
-              >
-                Plana Docente
-                <svg 
-                  className={`w-4 h-4 transition-transform ${dropdownOpen.docentes ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {dropdownOpen.docentes && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl z-50 text-gray-800 font-normal">
-                  <div className="py-2">
-                    <Link 
-                      to="/docentes/directorio" 
-                      className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                      onClick={closeAllDropdowns}
-                    >
-                      Directorio de Profesores
-                    </Link>
-                    <Link 
-                      to="/docentes/investigacion" 
-                      className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                      onClick={closeAllDropdowns}
-                    >
-                      Líneas de Investigación
-                    </Link>
-                    <Link 
-                      to="/docentes/perfiles" 
-                      className="block px-4 py-2 hover:bg-gray-100 transition-colors"
-                      onClick={closeAllDropdowns}
-                    >
-                      Perfiles Académicos
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
+            <Link to="/docentes" className="hover:text-gray-300 transition-colors">
+  Plana Docente
+</Link>
 
             <Link to="/contacto" className="hover:text-gray-300 transition-colors">
               Contacto
@@ -735,49 +693,16 @@ function Header() {
           </div>
 
           {/* Plana Docente Mobile Submenu */}
-          <div>
-            <button
-              onClick={(e) => toggleMobileDropdown('docentes', e)}
-              className="w-full flex justify-between items-center text-lg font-medium hover:text-gray-300 transition-colors"
-              aria-expanded={dropdownOpen.docentes}
-            >
-              Plana Docente
-              <svg 
-                className={`w-5 h-5 transition-transform ${dropdownOpen.docentes ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            {dropdownOpen.docentes && (
-              <div className="mt-2 ml-4 space-y-2">
-                <Link 
-                  to="/docentes/directorio" 
-                  onClick={() => setMenuOpen(false)} 
-                  className="flex items-center gap-2 text-base text-gray-300 hover:text-white transition-colors py-1"
-                >
-                  <MdPersonSearch className="text-lg" /> Directorio de Profesores
-                </Link>
-                <Link 
-                  to="/docentes/investigacion" 
-                  onClick={() => setMenuOpen(false)} 
-                  className="flex items-center gap-2 text-base text-gray-300 hover:text-white transition-colors py-1"
-                >
-                  <MdScience className="text-lg" /> Líneas de Investigación
-                </Link>
-                <Link 
-                  to="/docentes/perfiles" 
-                  onClick={() => setMenuOpen(false)} 
-                  className="flex items-center gap-2 text-base text-gray-300 hover:text-white transition-colors py-1"
-                >
-                  <MdBarChart className="text-lg" /> Perfiles Académicos
-                </Link>
-              </div>
-            )}
-          </div>
-
+          
+<Link
+  to="/docentes"
+  onClick={() => setMenuOpen(false)}
+  className="flex items-center justify-between text-lg font-medium hover:text-gray-300 transition-colors"
+>
+  <div className="flex items-center gap-2">
+    <MdPersonSearch className="text-xl" /> Plana Docente
+  </div>
+</Link>
           <Link
             to="/contacto"
             onClick={() => setMenuOpen(false)}

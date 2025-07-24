@@ -7,11 +7,10 @@ import StudentLoginPage from './pages/auth/Login/StudentLoginPage';
 import HomeStudent from './pages/student/HomeStudent';
 import AdmisionPage from './pages/student/AdmisionPage';
 import TramitesPage from './pages/student/TramitesPage';
-import GuiasPage from './pages/student/GuiasPage';
-import TarifarioPage from './pages/student/TarifarioPage';
 import DocentesPage from './pages/student/DocentesPage';
 import ToasterProvider from './components/ui/ToasterProvider';
 import InformacionFinancieraPage from './pages/student/InformacionFinancieraPage'; 
+import ContactoPage from './pages/student/ContactoPage';
 
 function App() {
   return (
@@ -39,8 +38,9 @@ function App() {
               <Route path="/tramites/certificados" element={<TramitesPage />} />
               <Route path="/tramites/modificacion" element={<TramitesPage />} />
               <Route path="/tramites/grado" element={<TramitesPage />} />
-              <Route path="/tarifario" element={<TarifarioPage />} />
               <Route path="/docentes" element={<DocentesPage />} />
+              <Route path="/contacto" element={<ContactoPage />} />
+
             </Route>
           </Route>
           <Route path="/" element={<Navigate to="/login" replace />} />
