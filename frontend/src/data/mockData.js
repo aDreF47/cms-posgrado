@@ -143,6 +143,7 @@ export const validateStudentCode = (code) => {
   return code === mockDatabase.config.studentAccessCode
 }
 
+
 // Datos mock para funcionalidades del sistema
 export const systemFeatures = [
   {
@@ -199,7 +200,7 @@ export const enrollmentProcess = [
     duration: "3 semanas",
     icon: "💳",
     status: "active",
-    description: "Pago por derecho de inscripción a través de San Market UNMSM (BCP o Yape)",
+    description: "Pago por derecho de inscripción a través de San Market UNMSM (BCP)",
     requirements: ["Pago de inscripción", "Registro en plataforma virtual"]
   },
   {
