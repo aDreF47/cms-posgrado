@@ -1,39 +1,51 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Header from './components/layout/Header';
-
-// Páginas básicas
-const HomePage = () => (
-  <div className="pt-24 pb-8">
-    <div className="max-w-7xl mx-auto px-4">
-      <h1 className="text-3xl font-bold text-[#880E1F]">🏠 Portal de Estudiantes</h1>
-      <p className="mt-4">Bienvenido al portal de posgrado</p>
-    </div>
-  </div>
-);
-
-const LoginPage = () => (
-  <div className="min-h-screen flex items-center justify-center bg-[#880E1F]">
-    <div className="bg-white p-8 rounded-lg">
-      <h2>Login de Estudiantes</h2>
-      <p>Aquí irá el formulario</p>
-    </div>
-  </div>
-);
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import PublicRoute from './components/auth/PublicRoute'; // ← NUEVO
+import Layout from './components/layout/Layout';
+import StudentLoginPage from './pages/auth/Login/StudentLoginPage';
+import HomeStudent from './pages/student/HomeStudent';
+import AdmisionPage from './pages/student/AdmisionPage';
+import TramitesPage from './pages/student/TramitesPage';
+import DocentesPage from './pages/student/DocentesPage';
+import ToasterProvider from './components/ui/ToasterProvider';
+import InformacionFinancieraPage from './pages/student/InformacionFinancieraPage'; 
+import ContactoPage from './pages/student/ContactoPage';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div>
-          <Header />
-          <Routes>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="*" element={<Navigate to="/home" />} />
-          </Routes>
-        </div>
+         <ToasterProvider />
+        
+        <Routes>
+          /* 🔓 Rutas públicas (protegidas contra usuarios autenticados) */
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<StudentLoginPage />} />
+          </Route>
+
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/home" element={<HomeStudent />} />
+              <Route path="/admision" element={<AdmisionPage />} />
+              <Route path="/informacion-financiera" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/oficiales" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/pagos" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/becas" element={<InformacionFinancieraPage />} />
+              <Route path="/tarifarios/calendario" element={<InformacionFinancieraPage />} />
+              <Route path="/tramites" element={<TramitesPage />} />
+              <Route path="/tramites/matricula" element={<TramitesPage />} />
+              <Route path="/tramites/certificados" element={<TramitesPage />} />
+              <Route path="/tramites/modificacion" element={<TramitesPage />} />
+              <Route path="/tramites/grado" element={<TramitesPage />} />
+              <Route path="/docentes" element={<DocentesPage />} />
+              <Route path="/contacto" element={<ContactoPage />} />
+
+            </Route>
+          </Route>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
   );

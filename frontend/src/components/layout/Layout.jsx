@@ -1,36 +1,29 @@
-import { useState } from 'react'
-import Header from './Header.jsx'
-import Footer from './Footer.jsx'
-import StudentLogin from '../auth/StudentLogin.jsx'
-import AdminLogin from '../auth/AdminLogin.jsx'
+import { Outlet } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import Header from './Header';
+import Footer from './Footer';
+import LoadingSpinner from './LoadingSpinner';
 
-const Layout = ({ children }) => {
-  const [showStudentLogin, setShowStudentLogin] = useState(false)
-  const [showAdminLogin, setShowAdminLogin] = useState(false)
+const Layout = () => {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <LoadingSpinner size="xl" message="Cargando portal..." />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Header 
-        onStudentLogin={() => setShowStudentLogin(true)}
-        onAdminLogin={() => setShowAdminLogin(true)}
-      />
-      
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header />
       <main className="flex-1">
-        {children}
+        <Outlet /> {/* Aquí se renderizan las páginas */}
       </main>
-      
       <Footer />
-      
-      {/* Modals */}
-      {showStudentLogin && (
-        <StudentLogin onClose={() => setShowStudentLogin(false)} />
-      )}
-      
-      {showAdminLogin && (
-        <AdminLogin onClose={() => setShowAdminLogin(false)} />
-      )}
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

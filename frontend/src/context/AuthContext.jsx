@@ -1,127 +1,246 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-
-const AuthContext = createContext();
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+import { createContext, useContext, useReducer, useEffect } from "react";
+import { api } from "../services/api.js";
+import { notifications } from "../utils/notifications";
+import toast from "react-hot-toast";
+// Initial state
+const initialState = {
+  isAuthenticated: false,
+  user: null,
+  userType: null, // 'student' | 'admin'
+  role: null, // 'admin' | 'colaborador' (solo para admins)
+  permissions: [],
+  loading: true,
+  error: null,
 };
 
-export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userType, setUserType] = useState(null); // 'student' | 'admin'
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+// Action types
+const AUTH_ACTIONS = {
+  AUTH_START: "AUTH_START",
+  AUTH_SUCCESS: "AUTH_SUCCESS",
+  AUTH_FAILURE: "AUTH_FAILURE",
+  LOGOUT: "LOGOUT",
+  CLEAR_ERROR: "CLEAR_ERROR",
+  SET_LOADING: "SET_LOADING",
+};
 
-  // Simular verificación de sesión al iniciar
+// Reducer
+const authReducer = (state, action) => {
+  switch (action.type) {
+    case AUTH_ACTIONS.AUTH_START:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case AUTH_ACTIONS.AUTH_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload.user,
+        userType: action.payload.userType,
+        role: action.payload.role,
+        permissions: action.payload.permissions || [],
+        loading: false,
+        error: null,
+      };
+
+    case AUTH_ACTIONS.AUTH_FAILURE:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+        userType: null,
+        role: null,
+        permissions: [],
+        loading: false,
+        error: action.payload,
+      };
+
+    case AUTH_ACTIONS.LOGOUT:
+      return {
+        ...initialState,
+        loading: false,
+      };
+
+    case AUTH_ACTIONS.CLEAR_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
+
+    case AUTH_ACTIONS.SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
+
+// Create context
+const AuthContext = createContext();
+
+// Provider component
+export const AuthProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(authReducer, initialState)
+  
+  // Check existing session on app start
   useEffect(() => {
     checkExistingSession();
   }, []);
 
   const checkExistingSession = async () => {
     try {
-      const session = localStorage.getItem('cms_session');
-      if (session) {
-        const sessionData = JSON.parse(session);
-        if (new Date(sessionData.expiresAt) > new Date()) {
-          setIsAuthenticated(true);
-          setUserType(sessionData.userType);
-          setUser(sessionData.user);
-        } else {
-          localStorage.removeItem('cms_session');
-        }
+      dispatch({ type: AUTH_ACTIONS.AUTH_START })
+      
+      const result = await api.auth.verify()
+      
+      if (result.valid && result.session) {
+        const session = result.session
+        dispatch({
+          type: AUTH_ACTIONS.AUTH_SUCCESS,
+          payload: {
+            user: session.user || { userType: session.userType },
+            userType: session.userType,
+            role: session.role,
+            permissions: session.permissions || []
+          }
+        })
+      } else {
+        dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false })
       }
     } catch (error) {
-      console.error('Session check failed:', error);
-      localStorage.removeItem('cms_session');
+      console.error('Session check failed:', error)
+      dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: false })
     }
-    setLoading(false);
-  };
-
+  }
+  
+  // Student login
   const studentLogin = async (accessCode) => {
     try {
-      setError(null);
-      // Simular login estudiantil
-      if (accessCode === 'POSGRADO2025') {
-        const session = {
+      dispatch({ type: AUTH_ACTIONS.AUTH_START })
+      
+      const result = await api.auth.studentLogin(accessCode)
+      
+      dispatch({
+        type: AUTH_ACTIONS.AUTH_SUCCESS,
+        payload: {
+          user: { userType: 'student' },
           userType: 'student',
-          user: { type: 'student' },
-          expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString()
-        };
-        
-        localStorage.setItem('cms_session', JSON.stringify(session));
-        setIsAuthenticated(true);
-        setUserType('student');
-        setUser(session.user);
-        return { success: true };
-      } else {
-        throw new Error('Código de acceso inválido');
-      }
+          role: null,
+          permissions: ['read']
+        }
+      })
+      
+      return { success: true }
     } catch (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      dispatch({
+        type: AUTH_ACTIONS.AUTH_FAILURE,
+        payload: error.message
+      })
+      return { success: false, error: error.message }
     }
-  };
-
+  }
+  
+  // Admin login  
   const adminLogin = async (username, password) => {
     try {
-      setError(null);
-      // Simular login admin
-      const validCredentials = [
-        { username: 'admin', password: 'admin123', role: 'admin' },
-        { username: 'colaborador1', password: 'colab123', role: 'colaborador' }
-      ];
+      dispatch({ type: AUTH_ACTIONS.AUTH_START })
       
-      const user = validCredentials.find(u => u.username === username && u.password === password);
+      const result = await api.auth.adminLogin(username, password)
       
-      if (user) {
-        const session = {
+      dispatch({
+        type: AUTH_ACTIONS.AUTH_SUCCESS,
+        payload: {
+          user: result.user,
           userType: 'admin',
-          user: { username: user.username, role: user.role },
-          expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString()
-        };
-        
-        localStorage.setItem('cms_session', JSON.stringify(session));
-        setIsAuthenticated(true);
-        setUserType('admin');
-        setUser(session.user);
-        return { success: true };
-      } else {
-        throw new Error('Credenciales inválidas');
-      }
+          role: result.role,
+          permissions: result.permissions || []
+        }
+      })
+      
+      return { success: true }
     } catch (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      dispatch({
+        type: AUTH_ACTIONS.AUTH_FAILURE,
+        payload: error.message
+      })
+      return { success: false, error: error.message }
     }
-  };
-
+  }
+  
+  // Logout
   const logout = async () => {
-    localStorage.removeItem('cms_session');
-    setIsAuthenticated(false);
-    setUserType(null);
-    setUser(null);
-    setError(null);
-  };
-
-  const clearError = () => setError(null);
-
+    try {
+      await api.auth.logout()
+      dispatch({ type: AUTH_ACTIONS.LOGOUT })
+      return { success: true }
+    } catch (error) {
+      // Even if API call fails, clear local state
+      dispatch({ type: AUTH_ACTIONS.LOGOUT })
+      return { success: true }
+    }
+  }
+  
+  // Clear error
+  const clearError = () => {
+    dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR })
+  }
+  
+  // Helper functions
+  const hasPermission = (permission) => {
+    return state.permissions.includes(permission)
+  }
+  
+  const isAdmin = () => {
+    return state.userType === 'admin'
+  }
+  
+  const isStudent = () => {
+    return state.userType === 'student'
+  }
+  
+  const canWrite = () => {
+    return hasPermission('write') || hasPermission('manage_users')
+  }
+  
+  const canDelete = () => {
+    return hasPermission('delete') || hasPermission('manage_users')
+  }
+  
+  const value = {
+    // State
+    ...state,
+    
+    // Actions
+    studentLogin,
+    adminLogin,
+    logout,
+    clearError,
+    
+    // Helpers
+    hasPermission,
+    isAdmin,
+    isStudent,
+    canWrite,
+    canDelete
+  }
+  
   return (
-    <AuthContext.Provider value={{
-      isAuthenticated,
-      userType,
-      user,
-      loading,
-      error,
-      studentLogin,
-      adminLogin,
-      logout,
-      clearError
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
+
+// Custom hook
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
+}

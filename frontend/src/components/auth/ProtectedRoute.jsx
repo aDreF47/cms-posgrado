@@ -7,7 +7,7 @@ const ProtectedRoute = ({ requireAdmin = false }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
         <LoadingSpinner size="lg" message="Verificando acceso..." />
       </div>
     );
@@ -20,7 +20,6 @@ const ProtectedRoute = ({ requireAdmin = false }) => {
   if (requireAdmin && userType !== 'admin') {
     return <Navigate to="/home" replace />;
   }
-
   return <Outlet />;
 };
 
