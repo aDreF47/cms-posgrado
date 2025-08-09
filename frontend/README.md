@@ -1,3 +1,4 @@
+```
 cms-posgrado/
 ├── frontend/                  ← React app principal
 │   ├── src/
@@ -18,6 +19,7 @@ cms-posgrado/
 │   └── file-service/         ← Para después
 │
 └── README.md                 ← Documentación
+```
 
 ✅ Presentas mañana con mock funcional
 ✅ Migras después cambiando solo una variable
@@ -29,7 +31,8 @@ cms-posgrado/
 
 
 
-Estructura futura del backend:
+### Estructura futura del backend:
+```
 backend/
 ├── auth-service/           ← Tu código actual
 │   ├── package.json       ← Tu package.json actual
@@ -51,3 +54,4 @@ backend/
     ├── server.js          ← Especializado en archivos
     └── routes/
         └── upload.js      ← Upload de imágenes/docs
+```
